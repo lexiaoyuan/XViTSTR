@@ -1,0 +1,42 @@
+--------------------------------------------------------------------------------
+dataset_root:    data_lmdb_release/evaluation/IIIT5k_3000	 dataset: /
+sub-directory:	/.	 num samples: 3000
+Acc 85.333	 normalized_ED 0.955
+--------------------------------------------------------------------------------
+dataset_root:    data_lmdb_release/evaluation/SVT	 dataset: /
+sub-directory:	/.	 num samples: 647
+Acc 85.781	 normalized_ED 0.954
+--------------------------------------------------------------------------------
+dataset_root:    data_lmdb_release/evaluation/IC03_860	 dataset: /
+sub-directory:	/.	 num samples: 860
+Acc 94.302	 normalized_ED 0.980
+--------------------------------------------------------------------------------
+dataset_root:    data_lmdb_release/evaluation/IC03_867	 dataset: /
+sub-directory:	/.	 num samples: 867
+Acc 93.656	 normalized_ED 0.979
+--------------------------------------------------------------------------------
+dataset_root:    data_lmdb_release/evaluation/IC13_857	 dataset: /
+sub-directory:	/.	 num samples: 857
+Acc 91.365	 normalized_ED 0.975
+--------------------------------------------------------------------------------
+dataset_root:    data_lmdb_release/evaluation/IC13_1015	 dataset: /
+sub-directory:	/.	 num samples: 1015
+Acc 90.739	 normalized_ED 0.962
+--------------------------------------------------------------------------------
+dataset_root:    data_lmdb_release/evaluation/IC15_1811	 dataset: /
+sub-directory:	/.	 num samples: 1811
+Acc 74.379	 normalized_ED 0.905
+--------------------------------------------------------------------------------
+dataset_root:    data_lmdb_release/evaluation/IC15_2077	 dataset: /
+sub-directory:	/.	 num samples: 2077
+Acc 68.609	 normalized_ED 0.862
+--------------------------------------------------------------------------------
+dataset_root:    data_lmdb_release/evaluation/SVTP	 dataset: /
+sub-directory:	/.	 num samples: 645
+Acc 78.450	 normalized_ED 0.908
+--------------------------------------------------------------------------------
+dataset_root:    data_lmdb_release/evaluation/CUTE80	 dataset: /
+sub-directory:	/.	 num samples: 288
+Acc 73.958	 normalized_ED 0.881
+--------------------------------------------------------------------------------
+accuracy: IIIT5k_3000: 85.333	SVT: 85.781	IC03_860: 94.302	IC03_867: 93.656	IC13_857: 91.365	IC13_1015: 90.739	IC15_1811: 74.379	IC15_2077: 68.609	SVTP: 78.450	CUTE80: 73.958	total_accuracy: 82.315	averaged_infer_time: 0.150	# parameters: 5.445
