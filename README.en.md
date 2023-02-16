@@ -86,7 +86,8 @@ data_lmdb_release/
   - [xvitstr_tiny_exp3.pth](https://github.com/lexiaoyuan/XViTSTR/releases/download/V1.0.0/xvitstr_tiny_exp3.pth)
   - [xvitstr_tiny_exp4.pth](https://github.com/lexiaoyuan/XViTSTR/releases/download/V1.0.0/xvitstr_tiny_exp4.pth)
   - [xvitstr_small_exp1.pth](https://github.com/lexiaoyuan/XViTSTR/releases/download/V1.0.0/xvitstr_small_exp1.pth)
-  - [xvitstr_base_exp1.pth]()
+  - [xvitstr_base_exp1.pth]()（Baidu online disk：https://pan.baidu.com/s/12ja5hyim3rt7laTsvwgaSg?pwd=v3sz 
+    Extraction code：v3sz）
 - Benchmarks
 
 ```bash
