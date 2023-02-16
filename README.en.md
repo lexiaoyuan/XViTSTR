@@ -80,6 +80,13 @@ data_lmdb_release/
     └── lock.mdb
 ```
 ## Quick validation using a pre-trained model
+- Download the weights file (`*.pth`) from Releases to the `. /saved_models` directory.
+  - [xvitstr_tiny_exp1.pth](https://github.com/lexiaoyuan/XViTSTR/releases/download/V1.0.0/xvitstr_tiny_exp1.pth)
+  - [xvitstr_tiny_exp2.pth](https://github.com/lexiaoyuan/XViTSTR/releases/download/V1.0.0/xvitstr_tiny_exp2.pth)
+  - [xvitstr_tiny_exp3.pth](https://github.com/lexiaoyuan/XViTSTR/releases/download/V1.0.0/xvitstr_tiny_exp3.pth)
+  - [xvitstr_tiny_exp4.pth](https://github.com/lexiaoyuan/XViTSTR/releases/download/V1.0.0/xvitstr_tiny_exp4.pth)
+  - [xvitstr_small_exp1.pth](https://github.com/lexiaoyuan/XViTSTR/releases/download/V1.0.0/xvitstr_small_exp1.pth)
+  - [xvitstr_base_exp1.pth]()
 - Benchmarks
 
 ```bash
@@ -92,10 +99,20 @@ export CUDA_VISIBLE_DEVICES=0
 python3 test.py --saved_model="./saved_models/xvitstr_tiny_exp4.pth" --img_path="demo.jpg" --eval_data="" --sensitive --data_filtering_off
 ```
 
+- Calculate infer time
+```bash
+export CUDA_VISIBLE_DEVICES=0
+python3 test.py --saved_model="./saved_models/xvitstr_tiny_exp4.pth" --img_path="./demo_image/" --eval_data="" --sensitive --data_filtering_off --calculate_infer_time
+
+- Calculate FLOPS
+​```bash
+export CUDA_VISIBLE_DEVICES=0
+python3 test.py --eval_data="" --sensitive --data_filtering_off --flops
+
 ## Train
 
 - XViTSTR Tiny+ *Foc* + *Loc* in the default training paper:
-```bash
+​```bash
 RANDOM=$$
 export CUDA_VISIBLE_DEVICES=0
 python3 train.py --train_data="data_lmdb_release/training" --valid_data="data_lmdb_release/validation" --manualSeed=$RANDOM --sensitive --adam --lr=0.001 --scheduler --exp="Name of experiment"

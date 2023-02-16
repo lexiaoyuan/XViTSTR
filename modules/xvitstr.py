@@ -9,7 +9,6 @@ import torch.utils.model_zoo as model_zoo
 from timm.models import create_model
 from timm.models.registry import register_model
 from timm.models.vision_transformer import (Attention, Block, VisionTransformer, _cfg)
-from timm.models.layers import to_2tuple
 
 from utils import Loss_f
 
@@ -42,33 +41,6 @@ def create_xvitstr(num_tokens, model=None, checkpoint_path='', pretrained=True):
     xvitstr.reset_classifier(num_classes=num_tokens)
 
     return xvitstr
-
-
-class PatchEmbedWithPool(nn.Module):
-    """ 将图片通过卷积操作分割成块，并使用MaxPool 
-    """
-
-    def __init__(self, img_size=224, patch_size=16, in_chans=3, embed_dim=768):
-        super().__init__()
-        img_size = to_2tuple(img_size)
-        patch_size = to_2tuple(patch_size)
-        num_patches = (img_size[1] // patch_size[1]) * \
-            (img_size[0] // patch_size[0])
-        self.img_size = img_size
-        self.patch_size = patch_size
-        self.num_patches = num_patches // 4
-
-        self.proj = nn.Conv2d(in_chans, embed_dim,
-                              kernel_size=patch_size, stride=patch_size)
-        self.pool = nn.MaxPool2d(2, 2)
-
-    def forward(self, x):
-        B, C, H, W = x.shape
-        # FIXME look at relaxing size constraints
-        assert H == self.img_size[0] and W == self.img_size[1], \
-            f"Input image size ({H}*{W}) doesn't match model ({self.img_size[0]}*{self.img_size[1]})."
-        x = self.pool(self.proj(x)).flatten(2).transpose(1, 2)
-        return x
 
 
 class MyAttention(Attention):
@@ -142,7 +114,7 @@ class XViTSTR(VisionTransformer):
         self.loss_fv = 0
         for blk in self.blocks:
             x = blk(x)
-            # 累加每个编码器块中的正交约束
+            # 累加每个编码器块中的正交约束，测试时可注释掉
             self.loss_fq += blk.attn.loss_fq
             self.loss_fk += blk.attn.loss_fk
             self.loss_fv += blk.attn.loss_fv
@@ -261,10 +233,10 @@ def xvitstr_tiny_patch16_224(pretrained=False, **kwargs):
     # 使用rgb输入：kwargs['in_chans'] = 3
     kwargs['in_chans'] = 1
 
-    # 配置自定义的参数，得到ViTSTR模型实例
+    # 配置自定义的参数，得到XViTSTR模型实例
     # 配置Dropout和DropPath：drop_rate=0.1, attn_drop_rate=0.1, drop_path_rate=0.1
-    model = XViTSTR(patch_size=16, embed_dim=192, depth=12, num_heads=3, mlp_ratio=4,
-                    qkv_bias=True, drop_rate=0.1, attn_drop_rate=0.1, drop_path_rate=0.1, **kwargs)
+    model = XViTSTR(patch_size=16, embed_dim=192, depth=12, num_heads=3, mlp_ratio=4, qkv_bias=True, drop_rate=0.1, attn_drop_rate=0.1, drop_path_rate=0.1, **kwargs)
+    
 
     model.default_cfg = _cfg(url='https://dl.fbaipublicfiles.com/deit/deit_tiny_patch16_224-a1311bcf.pth')
     if pretrained:

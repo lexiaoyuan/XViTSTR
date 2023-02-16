@@ -1,4 +1,4 @@
-# 正交约束多头自注意力用于场景文本识别
+# 基于正交约束多头自注意力的场景文本识别方法
 
 [中文](./README.md) | [English](./README.en.md)
 
@@ -80,6 +80,15 @@ data_lmdb_release/
     └── lock.mdb
 ```
 ## 快速验证
+
+- 下载Releases中的权重文件（`*.pth`)到`./saved_models`目录下。
+  - [xvitstr_tiny_exp1.pth](https://github.com/lexiaoyuan/XViTSTR/releases/download/V1.0.0/xvitstr_tiny_exp1.pth)
+  - [xvitstr_tiny_exp2.pth](https://github.com/lexiaoyuan/XViTSTR/releases/download/V1.0.0/xvitstr_tiny_exp2.pth)
+  - [xvitstr_tiny_exp3.pth](https://github.com/lexiaoyuan/XViTSTR/releases/download/V1.0.0/xvitstr_tiny_exp3.pth)
+  - [xvitstr_tiny_exp4.pth](https://github.com/lexiaoyuan/XViTSTR/releases/download/V1.0.0/xvitstr_tiny_exp4.pth)
+  - [xvitstr_small_exp1.pth](https://github.com/lexiaoyuan/XViTSTR/releases/download/V1.0.0/xvitstr_small_exp1.pth)
+  - [xvitstr_base_exp1.pth]()
+
 - 基准数据集测试
 
 ```bash
@@ -91,6 +100,16 @@ python3 test.py --eval_data="data_lmdb_release/evaluation" --benchmark_all_eval 
 export CUDA_VISIBLE_DEVICES=0
 python3 test.py --saved_model="./saved_models/xvitstr_tiny_exp4.pth" --img_path="demo.jpg" --eval_data="" --sensitive --data_filtering_off
 ```
+- 推理时间计算
+```bash
+export CUDA_VISIBLE_DEVICES=0
+python3 test.py --saved_model="./saved_models/xvitstr_tiny_exp4.pth" --img_path="./demo_image/" --eval_data="" --sensitive --data_filtering_off --calculate_infer_time
+```
+- FLOPS计算
+```bash
+export CUDA_VISIBLE_DEVICES=0
+python3 test.py --eval_data="" --sensitive --data_filtering_off --flops
+```
 
 ## 快速训练
 
@@ -100,6 +119,7 @@ RANDOM=$$
 export CUDA_VISIBLE_DEVICES=0
 python3 train.py --train_data="data_lmdb_release/training" --valid_data="data_lmdb_release/validation" --manualSeed=$RANDOM --sensitive --adam --lr=0.001 --scheduler --exp="Name of experiment"
 ```
+
 - 训练其它模型可参考源码和注释。可配置参数在[utils.py](./utils.py)中。
 
 ## 注意力可视化

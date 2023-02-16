@@ -278,6 +278,85 @@ def test_img(opt):
             f'预测结果：{pred_str} \t 置信度：{float(confidence_score)} \t 前向传播时间：{forward_time:0.4f}s \t 推理时间：{infer_time:0.4f}s')
 
 
+def img2text(model, images, converter):
+    pred_strs = []
+    with torch.no_grad():
+        for img in images:
+            pred = model(img, seqlen=converter.batch_max_length)
+            _, pred_index = pred.topk(1, dim=-1, largest=True, sorted=True)
+            pred_index = pred_index.view(-1, converter.batch_max_length)
+            length_for_pred = torch.IntTensor([converter.batch_max_length - 1])
+            pred_str = converter.decode(pred_index[:, 1:], length_for_pred)
+            pred_EOS = pred_str[0].find('[s]')
+            pred_str = pred_str[0][:pred_EOS]
+
+            pred_strs.append(pred_str)
+
+    return pred_strs
+
+
+def infer(opt):
+    """ 模型配置 """
+    converter = TokenLabelConverter(opt)
+    opt.num_class = len(converter.character)
+    model = Model(opt)
+    model = torch.nn.DataParallel(model).to(device)
+    """ 加载权重 """
+    model.load_state_dict(torch.load(opt.saved_model, map_location=device))
+
+    """ 加载图片 """
+    files = files = ["demo_1.png", "demo_2.jpg", "demo_3.png",  "demo_4.png",  "demo_5.png","demo_6.png",  "demo_7.png",  "demo_8.jpg", "demo_9.jpg", "demo_10.jpg"]
+    images = []
+    for file in files:
+        # 打开图片
+        img = Image.open(os.path.join(opt.img_path, file)).convert("L")
+        # 调整大小
+        image = img.resize((opt.imgW, opt.imgH), Image.Resampling.BICUBIC)
+        # 转为张量
+        image_tensor = transforms.ToTensor()(image)
+        # 调整维度
+        image_tensor = image_tensor.unsqueeze(0).to(device)
+        images.append(image_tensor)
+    
+    """ 推理图片 """
+    model.eval()
+    # warm up
+    n_times = 10
+    n_total = len(images) * n_times
+    [img2text(model, images, converter) for _ in range(n_times)]
+    
+    # 正式测试
+    start_time = time.time()
+    [img2text(model, images, converter) for _ in range(n_times)]
+    end_time = time.time()
+    ave_time = (end_time - start_time) / n_total
+    print("Average inference time per image: %0.2e sec" % ave_time) 
+
+    pred_strs = img2text(model, images, converter)
+
+    return zip(files, pred_strs)
+
+
+# https://github.com/clovaai/deep-text-recognition-benchmark/issues/125
+def get_flops(opt):
+    from thop import profile
+    """ 模型配置 """
+    converter = TokenLabelConverter(opt)
+    opt.num_class = len(converter.character)
+    model = Model(opt)
+    model = model.cuda()
+    # model = torch.nn.DataParallel(model).to(device)
+    """ 加载权重 """
+    # model.load_state_dict(torch.load(opt.saved_model, map_location=device))
+    
+    input = torch.randn(1, 1, opt.imgH, opt.imgW).to(device)
+    # text_for_pred = torch.LongTensor(1, seqlen).fill_(0).to(device)
+    MACs, params = profile(model, inputs=(input, converter.batch_max_length))
+    flops = 2 * MACs # approximate FLOPS
+    return f'Approximate FLOPS: {flops:0.3f}, params: {params:0.3f}'
+
+
+
 if __name__ == "__main__":
     # 获取参数
     opt = get_args(is_train=False)
@@ -292,3 +371,20 @@ if __name__ == "__main__":
     if opt.img_path != "" and os.path.isfile(opt.img_path):
         # 单张图片测试
         test_img(opt)
+    if opt.calculate_infer_time and opt.img_path != "" and os.path.isdir(opt.img_path):
+        # 计算推理时间
+        data = infer(opt)
+        """ 
+        exp1和exp4分别运行10次的推理时间(ms/image)：
+        exp1: 12.9, 13.9, 12.7, 13.6, 13.0, 17.9, 13.4, 16.5, 13.6, 13.4
+        exp4: 13.7, 13.7, 14.1, 14.3, 13.9, 17.3, 14.0, 14.2, 14.8, 12.2
+        取平均值：
+        exp1: 14.1
+        exp2: 14.2 
+        """
+        for filename, text in data:
+            print(f"{filename}\t: {text}")
+    if opt.flops:
+        # 计算FLOPS
+        # Approximate FLOPS: 2119343616.000
+        print(get_flops(opt))
