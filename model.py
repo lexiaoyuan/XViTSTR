@@ -17,18 +17,6 @@ class Model(nn.Module):
     def get_qkv_weights(self):
         return self.xvitstr.get_qkv_weights()
     
-    def get_qkv_features(self):
-        return self.xvitstr.get_qkv_features()
-    
-    def get_features_q(self):
-        return self.xvitstr.features_q
-    
-    def get_features_k(self):
-        return self.xvitstr.features_k
-    
-    def get_features_v(self):
-        return self.xvitstr.features_v
-    
     def get_loss_fq(self):
         return self.xvitstr.get_loss_fq()
     
