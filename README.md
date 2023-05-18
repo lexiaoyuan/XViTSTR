@@ -106,7 +106,7 @@ python3 test.py --saved_model="./saved_models/xvitstr_tiny_exp4.pth" --img_path=
 export CUDA_VISIBLE_DEVICES=0
 python3 test.py --saved_model="./saved_models/xvitstr_tiny_exp4.pth" --img_path="./demo_image/" --eval_data="" --sensitive --data_filtering_off --calculate_infer_time
 ```
-- FLOPS计算
+- FLOPs计算
 ```bash
 export CUDA_VISIBLE_DEVICES=0
 python3 test.py --eval_data="" --sensitive --data_filtering_off --flops

@@ -71,7 +71,7 @@ def get_args(is_train=True):
                         help='快速平均精度计算')
     parser.add_argument('--calculate_infer_time',
                         action='store_true', help='计算推理时间')
-    parser.add_argument('--flops', action='store_true', help='计算FLOPS')
+    parser.add_argument('--flops', action='store_true', help='计算FLOPs')
     parser.add_argument('--eval_data', required=not is_train,
                         help='评估数据集的路径')
     parser.add_argument('--img_path', type=str, default='', help='测试单张图像的路径')

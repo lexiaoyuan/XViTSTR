@@ -352,8 +352,8 @@ def get_flops(opt):
     input = torch.randn(1, 1, opt.imgH, opt.imgW).to(device)
     # text_for_pred = torch.LongTensor(1, seqlen).fill_(0).to(device)
     MACs, params = profile(model, inputs=(input, converter.batch_max_length))
-    flops = 2 * MACs # approximate FLOPS
-    return f'Approximate FLOPS: {flops:0.3f}, params: {params:0.3f}'
+    flops = 2 * MACs # approximate FLOPs
+    return f'Approximate FLOPs: {flops:0.3f}, params: {params:0.3f}'
 
 
 
@@ -386,6 +386,6 @@ if __name__ == "__main__":
         for filename, text in data:
             print(f"{filename}\t: {text}")
     if opt.flops:
-        # 计算FLOPS
-        # Approximate FLOPS: 2119343616.000
+        # 计算FLOPs
+        # Approximate FLOPs: 2119343616.000
         print(get_flops(opt))
