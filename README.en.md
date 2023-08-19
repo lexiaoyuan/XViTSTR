@@ -1,6 +1,8 @@
-# Orthogonality constrained multihead self-attention for scene text recognition
+# Orthogonality Constrained Multihead Self-Attention for Scene Text Recognition Research
 
 [中文](./README.md) | [English](./README.en.md)
+
+> PyTorch code of my paper [正交约束多头自注意力的场景文本识别方法-Orthogonality constrained multihead self-attention for scene text recognition (cjig.cn)](http://www.cjig.cn/jig/ch/reader/view_abstract.aspx?flag=2&file_no=202210190000001&journal_id=jig) (XViTSTR)
 
 ## Installation
 
