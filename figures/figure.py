@@ -1,5 +1,12 @@
 import matplotlib.pyplot as plt
+from matplotlib.ticker import FuncFormatter
 
+def format_with_spaces(x, pos):  
+    """ 数值超过4位数时，千分位添加空格 """
+    return f'{int(x):,}'.replace(",", " ")
+
+
+formatter = FuncFormatter(format_with_spaces) 
 
 def oc_cmp():
     exp1_loss_oc_iter = []
@@ -55,11 +62,14 @@ def oc_cmp():
     plt.ylabel('FQ', fontdict={'size':7.5, 'family': 'Times New Roman', 'style': 'italic'})
     plt.xticks(fontproperties='Times New Roman', size=7.5)
     plt.yticks(fontproperties='Times New Roman', size=7.5)
-    plt.gca().spines['right'].set_visible(False)
-    plt.gca().spines['top'].set_visible(False)
+    # plt.gca().spines['right'].set_visible(False)
+    # plt.gca().spines['top'].set_visible(False)
+    # 格式化横坐标
+    plt.gca().xaxis.set_major_formatter(formatter)
     plt.legend(['实验$1$', '实验$2$', '实验$3$', '实验$4$'], loc=1, fontsize=7.5)
-    plt.savefig("./figures/exp1_exp2_exp3_exp4_loss_fq_300000.jpg",
-                dpi=300, bbox_inches="tight")
+    # 调整图例位置避免覆盖曲线
+    # plt.legend(['实验$1$', '实验$2$', '实验$3$', '实验$4$'], loc=4, fontsize=7.5, bbox_to_anchor=(1, 0.15))
+    plt.savefig("./figures/loss_fq.jpg", dpi=300, bbox_inches="tight")
 
 
 if __name__ == "__main__":
